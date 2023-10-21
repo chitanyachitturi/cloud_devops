@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2023-10-21"
+Resources:
+  MyEC2InstanceProfile:
+    Type: AWS::EC2::Instance
+    Properties:
+      AdditionalInfo: EC2 instance to deploy covid form application
+      Affinity: default
+      AvailabilityZone: us-east-1
+      IamInstanceProfile: 
+        - Ref: MyIAMInstanceProfile
+      ImageId: ami-0fec9863172e50c93
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t2.micro
+      KeyName: cloud_devops
+      SourceDestCheck: true
+
+  MyEBSProfile:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName: cloud_devops
+      CNAMEPrefix: coivid_app
+      Description: EBS to deploy covid analysis web app
+      EnvironmentName: cloud_devops_covid_app
+      OperationsRole: 
+        - Ref: MyIAMRoleProfile
+      PlatformArn: arn:aws:elasticbeanstalk:us-east-1::platform/Python 3.11 running on 64bit Amazon Linux 2023/4.0.5
+      #SolutionStackName: String
+      TemplateName: String
+      Tier: 
+        Name: Webserver
+        Type: Standard
+      VersionLabel: v1.0
+
+  MyDocDBProfile:
+    Type: AWS::DocDB::DBCluster
+    Properties:
+      AvailabilityZones: us-east-1
+      BackupRetentionPeriod: 1
+      DBClusterIdentifier: covid_data
+      EnableCloudwatchLogsExports: 
+        - audit
+        - error
+      MasterUsername: chaitanya
+      MasterUserPassword: 91365335
+      SnapshotIdentifier: covid_data-snapshot
+      UseLatestRestorableTime: true
+ 
+  MyS3Profile:
+    Type: AWS::S3::Bucket
+    Properties:
+      #AccelerateConfiguration: AccelerateConfiguration
+      AccessControl: BucketOwnerFullControl
+      BucketName: cloud_devops
+      IntelligentTieringConfigurations: 
+        - Disable
+      InventoryConfigurations: 
+        - Status: Disabled
+      LifecycleConfiguration: 
+        LifecycleConfiguration
+      LoggingConfiguration: 
+        DestinationBucketName: cloud_dev

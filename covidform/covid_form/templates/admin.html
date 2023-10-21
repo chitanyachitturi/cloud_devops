@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Covid Details Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.covid_form')}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.stats')}}">Statistics</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.admin')}}">Admin Panel</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</head>
+<body>
+  <style>
+  #form-data-table { max-width: 100%; border: 0px solid black; border-radius: 0px 0px 0px 0px; padding: 10px 40px; background-color: #fff;}
+  @media (max-width: 800px){
+    #form-data-table { max-width: 50%; }
+  }
+  .form-filter-table { max-width: 70%; border: 0px solid black; border-radius: 10px; padding: 0px 0px; background-color: #fff;}
+  </style>
+<div class="container pt-1 pb-2" style="background-color:#64949e; max-width: 100%;">
+  {% if updated  %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <h4 class="alert-heading">{{ updated_msg }}</h4>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endif %}
+  {% if errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <h4 class="alert-heading">Please fix the following errors for g Number: {{ gNum }}</h4>
+      <hr>
+      <ul>
+        {% for e in errors %}
+          <li>{{e}}</li>
+        {% endfor %}
+      </ul>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endif %}
+  <form class="form-group mx-auto p-2 pt-4 pb-4 form-filter-table" method="get" action="/admin">
+    <div class="form-row justify-content-center">
+      <div class="col-md-5">
+        <input class="form-control" type="search" placeholder="G Number" aria-label="Search" name="search">
+      </div>
+      <div class="col-md-1">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+  <form class="form-group mx-auto p-2 pt-4 form-filter-table" action="/admin" method="get" >
+    <div class="form-row m-0 p-0">
+      <div class="form-row col-sm-12 col-md-3">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-3">
+          <label for="collectionName" class="mt-2 float-right">Collection</label>
+        </div>
+        <div class="col-md-6">
+          <select id="collectionName" class="form-control" name="collectionName" required>
+            {% if collection_name == 'formData22' %}
+              <option value="formData22" selected>formData22</option>
+              <option value="formData21">formData21</option>
+            {% else %}
+              <option value="formData22">formData22</option>
+              <option value="formData21" selected>formData21</option>
+            {% endif %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row col-md-2 mx-3 ">
+        <div class="col-md-2">
+          <label for="inputState" class="mt-2 float-right">State</label>
+        </div>
+        <div class="col-md-10">
+<!--         <input type="text" class="form-control" id="inputState" name="state">-->
+          <select id="inputState" class="form-control" name="state">
+            <option selected disabled>...</option>
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="Florida">Florida</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row col-md-2 mx-3">
+        <div class="col-md-2">
+          <label for="inputStartDate" class="mt-2 float-right">From</label>
+        </div>
+        <div class="col-md-10">
+         <input type="date" class="form-control" id="inputStartDate" name="startDate">
+        </div>
+      </div>
+      <div class="form-row col-md-2 mx-2 mr-3">
+        <div class="col-md-2">
+          <label for="inputEndDate" class="mt-2 float-right">To</label>
+        </div>
+        <div class="col-md-10">
+          <input type="date" class="form-control" id="inputEndDate" name="endDate">
+        </div>
+      </div>
+      <div class="form-group col-sm-12 col-md-2">
+        <input type="submit" class="btn btn-primary btn-block" value="Filter">
+      </div>
+    </div>
+  </form>
+  {% if is_csv and data %}
+    <form class="form-group mx-auto p-2 pt-4" action="/downloadCsv" method="get">
+        <div class="form-group float-right">
+          <input type="submit" class="btn btn-warning" value="Download Csv">
+        </div>
+    </form>
+  {% endif %}
+
+  {% if data and is_search %}
+    <hr/>
+    <div class="text-center text-dark my-3">
+      <h5 class="bg-warning px-2 py-3" style="max-width:15%; margin: auto;border-radius: 15px;">
+        Student Details
+      </h5>
+    </div>
+    <hr/>
+    <table class="table table-secondary text-dark mx-auto" id="form-data-table">
+      <thead>
+        <tr>
+          <th scope="col">G Number</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col">State</th>
+          <th scope="col">Country</th>
+
+        </tr>
+      </thead>
+      <tr>
+        <form method="post" action="/update?id={{ data[0]['_id'] }}&collection=StudentDetails" onclick="event.preventDefault();">
+          <th scope="row">{{ data[0]['gNumber'] }}</th>
+          <th scope="row">{{ data[0]['email'] }}</th>
+          <th scope="row">+1 {{ data[0]['phone_number'] }}</th>
+          <th scope="row">{{ data[0]['state'] }}</th>
+          <th scope="row">{{ data[0]['country'] }}</th>
+
+        </form>
+      </tr>
+    </table>
+
+    {% for d in data[0]['data'] %}
+
+      <hr/>
+
+      {% if loop.index0 == 0 %}
+        <div class="text-center text-dark my-3">
+          <h5 class="bg-warning px-2 py-3" style="max-width:15%; margin: auto;border-radius: 15px;">
+            Data for 2021
+          </h5>
+        </div>
+        <hr/>
+      {% else %}
+        <div class="text-center text-dark my-3">
+          <h5 class="bg-warning px-2 py-3" style="max-width:15%; margin: auto;border-radius: 15px;">
+            Data for 2022
+          </h5>
+        </div>
+        <hr/>
+      {% endif %}
+
+      {% if not d %}
+        <div class="card bg-light m-3 p-5 mx-auto" style="max-width: 38rem;">
+              <div class="card-body text-danger text-center">
+                <h5 class="card-title">No record(s) found.</h5>
+              </div>
+            </div>
+      {% else %}
+        <table class="table table-secondary text-dark mx-auto" id="form-data-table">
+          <thead>
+            <tr>
+              <th scope="col">G Number</th>
+              <th scope="col">Name</th>
+              <th scope="col">State</th>
+              <th scope="col">Country</th>
+              <th scope="col">Affected Date</th>
+              <th scope="col">Vaccines got before affected</th>
+              <th scope="col">Vaccines got after affected</th>
+              <th scope="col">On Campus Living</th>
+              <th scope="col">Party Attended within last 7 days</th>
+              <th scope="col">Hospitalized</th>
+              <th scope="col">Recovery Days</th>
+              <th scope="col">Symptoms</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <form method="post" action="/update?id={{ d['_id'] }}" onclick="event.preventDefault();">
+                <th scope="row">{{ d['gNumber'] }}</th>
+                <input type="text" class="form-control" id="gNumber" name="gNumber" value="{{ d['gNumber'] }}" hidden>
+                <input type="text" class="form-control" id="inputCollectionName" name="collectionName" value="{{ d['collection_name'] }}" hidden>
+                <td><textarea rows="1" class="form-control" id="name" name="name">{{ d['name'] }}</textarea></td>
+                <td><textarea rows="1" class="form-control" id="state" name="state">{{ d['state'] }}</textarea></td>
+                <td><input type="text" class="form-control" id="country" name="country" value="{{ d['country'] }}" disabled/></td>
+                <td><input type="date" class="form-control" id="affectedDate" name="affectedDate" value="{{ d['affectedDate'] }}"></td>
+                <td>
+                  <select id="beforeVaccines" class="form-control" name="beforeVaccines" required>
+                    {% for i in range(4) %}
+                      {% if (i+1) == d['beforeVaccines']|int %}
+                        <option value="{{ i+1 }}" selected>{{ i+1 }}</option>
+                      {% else %}
+                        <option value="{{ i+1 }}">{{ i+1 }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </td>
+                <td>
+                  <select id="afterVaccines" class="form-control" name="afterVaccines" required>
+                    {% for i in range(4) %}
+                      {% if (i+1) == d['afterVaccines']|int %}
+                        <option value="{{ i+1 }}" selected>{{ i+1 }}</option>
+                      {% else %}
+                        <option value="{{ i+1 }}">{{ i+1 }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </td>
+                <td>
+                  <select id="onCampusLiving" class="form-control" name="onCampusLiving" required>
+                    {% if d['onCampusLiving'] == 'Yes' %}
+                      <option value="Yes" selected>Yes</option>
+                      <option value="No">No</option>
+                    {% else %}
+                      <option value="Yes">Yes</option>
+                      <option value="No" selected>No</option>
+                    {% endif %}
+                  </select>
+                </td>
+                <td>
+                  <select id="partiesAttendedInLast7Days" class="form-control" name="partiesAttendedInLast7Days" required>
+                    {% if d['partiesAttendedInLast7Days'] == 'Yes' %}
+                      <option value="Yes" selected>Yes</option>
+                      <option value="No">No</option>
+                    {% else %}
+                      <option value="Yes">Yes</option>
+                      <option value="No" selected>No</option>
+                    {% endif %}
+                  </select>
+                </td>
+                <td>
+                  <select id="hospitalized" class="form-control" name="hospitalized" required>
+                    {% if d['hospitalized'] == 'Yes' %}
+                      <option value="Yes" selected>Yes</option>
+                      <option value="No">No</option>
+                    {% else %}
+                      <option value="Yes">Yes</option>
+                      <option value="No" selected>No</option>
+                    {% endif %}
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" id="recoveryDays" name="recoveryDays" value="{{ d['recoveryDays'] }}"></td>
+                <td><textarea rows="1" class="form-control" id="symptoms" name="symptoms">{{ d['symptoms'] }}</textarea></td>
+                <td>
+                  <input type="submit" class="btn btn-primary mb-1" name="action" value="Update"/>
+                  <input type="submit" class="btn btn-danger" name="action" value="Delete"/>
+                </td>
+              </form>
+            </tr>
+          </tbody>
+        </table>
+      {% endif %}
+
+    {% endfor %}
+  {% endif %}
+
+  {% if not data and is_search %}
+    <div class="card bg-light m-3 p-5 mx-auto" style="max-width: 38rem;">
+        <div class="card-body text-danger text-center">
+          <h5 class="card-title">No record(s) found.</h5>
+        </div>
+      </div>
+  {% endif %}
+
+  {% if not is_search %}
+    {% if data %}
+      <table class="table table-secondary text-dark mx-auto" id="form-data-table">
+    <thead>
+      <tr>
+        <th scope="col">G Number</th>
+        <th scope="col">Name</th>
+        <th scope="col">State</th>
+        <th scope="col">Country</th>
+        <th scope="col">Affected Date</th>
+        <th scope="col">Vaccines got before affected</th>
+        <th scope="col">Vaccines got after affected</th>
+        <th scope="col">On Campus Living</th>
+        <th scope="col">Party Attended within last 7 days</th>
+        <th scope="col">Hospitalized</th>
+        <th scope="col">Recovery Days</th>
+        <th scope="col">Symptoms</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in data %}
+        <tr>
+          <form method="post" action="/update?id={{ d['_id'] }}" onclick="event.preventDefault();">
+            <th scope="row">{{ d['gNumber'] }}</th>
+            <input type="text" class="form-control" id="gNumber" name="gNumber" value="{{ d['gNumber'] }}" hidden>
+            <input type="text" class="form-control" id="inputCollectionName" name="collectionName" value="{{ collection_name }}" hidden>
+            <td><textarea rows="1" class="form-control" id="name" name="name">{{ d['name'] }}</textarea></td>
+            <td><textarea rows="1" class="form-control" id="state" name="state">{{ d['state'] }}</textarea></td>
+            <td><input type="text" class="form-control" id="country" name="country" value="{{ d['country'] }}" disabled/></td>
+            <td><input type="date" class="form-control" id="affectedDate" name="affectedDate" value="{{ d['affectedDate'] }}"></td>
+            <td>
+              <select id="beforeVaccines" class="form-control" name="beforeVaccines" required>
+                {% for i in range(4) %}
+                  {% if (i+1) == d['beforeVaccines']|int %}
+                    <option value="{{ i+1 }}" selected>{{ i+1 }}</option>
+                  {% else %}
+                    <option value="{{ i+1 }}">{{ i+1 }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </td>
+            <td>
+              <select id="afterVaccines" class="form-control" name="afterVaccines" required>
+                {% for i in range(4) %}
+                  {% if (i+1) == d['afterVaccines']|int %}
+                    <option value="{{ i+1 }}" selected>{{ i+1 }}</option>
+                  {% else %}
+                    <option value="{{ i+1 }}">{{ i+1 }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </td>
+            <td>
+              <select id="onCampusLiving" class="form-control" name="onCampusLiving" required>
+                {% if d['onCampusLiving'] == 'Yes' %}
+                  <option value="Yes" selected>Yes</option>
+                  <option value="No">No</option>
+                {% else %}
+                  <option value="Yes">Yes</option>
+                  <option value="No" selected>No</option>
+                {% endif %}
+              </select>
+            </td>
+            <td>
+              <select id="partiesAttendedInLast7Days" class="form-control" name="partiesAttendedInLast7Days" required>
+                {% if d['partiesAttendedInLast7Days'] == 'Yes' %}
+                  <option value="Yes" selected>Yes</option>
+                  <option value="No">No</option>
+                {% else %}
+                  <option value="Yes">Yes</option>
+                  <option value="No" selected>No</option>
+                {% endif %}
+              </select>
+            </td>
+            <td>
+              <select id="hospitalized" class="form-control" name="hospitalized" required>
+                {% if d['hospitalized'] == 'Yes' %}
+                  <option value="Yes" selected>Yes</option>
+                  <option value="No">No</option>
+                {% else %}
+                  <option value="Yes">Yes</option>
+                  <option value="No" selected>No</option>
+                {% endif %}
+              </select>
+            </td>
+            <td><input type="text" class="form-control" id="recoveryDays" name="recoveryDays" value="{{ d['recoveryDays'] }}"></td>
+            <td><textarea rows="1" class="form-control" id="symptoms" name="symptoms">{{ d['symptoms'] }}</textarea></td>
+            <td>
+              <input type="submit" class="btn btn-primary mb-1" name="action" value="Update"/>
+              <input type="submit" class="btn btn-danger" name="action" value="Delete"/>
+            </td>
+          </form>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% else %}
+      <div class="card bg-light m-3 p-5 mx-auto" style="max-width: 38rem;">
+        <div class="card-body text-danger text-center">
+          <h5 class="card-title">No record(s) found.</h5>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+<footer class="page-footer font-small bg-dark text-white ">
+  <div class="footer-copyright text-center py-3 blue">Covid survey Project: BY Chaitanya,Harshita,Chetana</br></div>
+</footer>
+</html>

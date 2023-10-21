@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Statistics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.covid_form')}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.stats')}}">Statistics</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('covidForm.admin')}}">Admin Panel</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</head>
+<body style="background-color:#64949e;">
+<div class="container p-3" style="background-color:#fff; min-width:90%;">
+    <br/>
+    <h4 class="text-center mt-3">Total count of users affected in both 2021 and 2022: <span id="totalUserCount" style="color: red;"></span> </h4>
+    <div id="pieChartDiv" class="mx-auto m-3" style="position: relative; height:40vh; width:25vw; background-color: #fff;">
+        <canvas id="pieCountChart"></canvas>
+    </div>
+    <br/>
+    <hr/>
+    <br/>
+    <h4 class="text-center">Month wise users recovered within <span id="withinDaysCount">14</span> days</h4>
+    <br/>
+    <form onsubmit="event.preventDefault(); console.log(this[0].value); getMonthWiseUserRecoveryCount(this[0].value, this[1].value);" class="mx-auto">
+        <div class="form-row align-items-center justify-content-center">
+            <div class="form-group col-md-1">
+                <label for="forYear" class="ml-3">For Year</label>
+            </div>
+            <div class="form-group col-md-4">
+              <select id="forYear" class="form-control" name="forYear" required>
+                <option value="2021">2021</option>
+                <option value="2022" selected>2022</option>
+              </select>
+            </div>
+            <div class="form-group col-md-1">
+                <label for="forYear" class="ml-3">Within Days</label>
+            </div>
+            <div class="form-group col-md-2">
+              <input id="withinDays" class="form-control" name="withinDays" value="14">
+            </div>
+            <div class="form-group col-md-1">
+                <input type="submit" class="form-control btn btn-primary" value="Filter">
+            </div>
+        </div>
+    </form>
+        <center>
+        <div id="lineChartDiv" class="mx-auto m-3" style="position: relative; height:52vh; width:60vw; background-color: #fff;">
+            <canvas id="lineCountChart"></canvas>
+        </div>
+        </center>
+    <br/>
+    <hr/>
+    <br/>
+    <h4 class="text-center">Month wise user hospitalization data</h4>
+    <br/>
+        <form onsubmit="event.preventDefault(); console.log(this[0].value); getHospitalizationData(this[0].value);" class="form mx-auto">
+            <div class="form-row align-items-center justify-content-center">
+                <div class="form-group col-md-1">
+                    <label for="forYear" class="ml-3">For Year</label>
+                </div>
+                <div class="form-group col-md-4">
+                  <select id="forYear2" class="form-control" name="forYear2" required>
+                    <option value="2021">2021</option>
+                    <option value="2022" selected>2022</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-1">
+                    <input type="submit" class="form-control btn btn-primary" value="Filter">
+                </div>
+            </div>
+        </form>
+    <br/>
+    <center>
+        <div id="renderHospitalizationChart" class="mx-auto m-3" style="position: relative; height:52vh; width:65vw; background-color: #fff;">
+          <canvas id="myHospitalizationChart"></canvas>
+        </div>
+    </center>
+    <br/>
+    <hr/>
+    <br/>
+    <h4 class="text-center">State wise affected users count</h4>
+    <br/>
+        <form onsubmit="event.preventDefault(); console.log(this[0].value); getStateData(this[0].value);" class="form mx-auto">
+            <div class="form-row align-items-center justify-content-center">
+                <div class="form-group col-md-1">
+                    <label for="forYear" class="ml-3">For Year</label>
+                </div>
+                <div class="form-group col-md-4">
+                  <select id="forYear3" class="form-control" name="forYear" required>
+                    <option value="2021">2021</option>
+                    <option value="2022" selected>2022</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-1">
+                  <input type="submit" class="form-control btn btn-primary" value="Filter" style="background-color:rgb(46, 170, 27);color:black">
+                </div>
+            </div>
+        </form>
+    <br/>
+    <center>
+        <div id="renderStateChart" class="mx-auto m-3" style="position: relative; height:62vh; width:65vw; background-color: #fff;">
+          <canvas id="myStateChart"></canvas>
+        </div>
+    </center>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='statistics.js') }}">
+</script>
+</body>
+<footer class="page-footer font-small bg-dark text-white ">
+  <div class="footer-copyright text-center py-3 blue">Covid survey Project: BY Chaitanya,Harshita,Chetana</br></div>
+</footer>
+</html>
